@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --accent: #0a84ff;
+  --accent-muted: #0a84ff22;
+  --surface: #fff;
+  --surface-raised: #f5f5f7;
+  --surface-border: #e5e5ea;
+  --ink: #1d1d1f;
+  --ink-muted: #424245;
+  --ink-faint: #86868b;
+  --grid-color: rgba(0, 0, 0, 0.04);
+  --font-display: "Playfair Display", serif;
+  --font-mono: "DM Mono", monospace;
+  --font-body: "DM Sans", sans-serif;
+}
+
+.dark {
+  --accent: #3b9eff;
+  --accent-muted: #3b9eff18;
+  --surface: #0a0a0f;
+  --surface-raised: #111118;
+  --surface-border: #1e1e2e;
+  --ink: #f2f2f7;
+  --ink-muted: #aeaeb2;
+  --ink-faint: #636366;
+  --grid-color: hsla(0, 0%, 100%, 0.03);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--surface-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); }
+::selection { background: var(--accent-muted); color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.font-display { font-family: var(--font-display); }
+.font-mono { font-family: var(--font-mono); }
+.font-body { font-family: var(--font-body); }
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0, #a78bfa 50%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glow-accent { box-shadow: 0 0 40px var(--accent-muted), 0 0 80px var(--accent-muted); }
+
+.glass {
+  background: hsla(0, 0%, 100%, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--surface-border);
+}
+.dark .glass { background: hsla(0, 0%, 100%, 0.03); }
+
+.noise-overlay:after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+.grid-bg {
+  background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bento-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.bento-card:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--accent-muted), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 0;
+}
+.bento-card:hover:before { opacity: 1; }
+
+.cursor-blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 0%, to { opacity: 1; } 50% { opacity: 0; } }
+
+.animated-underline { position: relative; }
+.animated-underline:after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+.animated-underline:hover:after { width: 100%; }
+
+.profile-ring {
+  background: conic-gradient(from 0deg, var(--accent), #a78bfa, #f472b6, var(--accent));
+  animation: spin-slow 8s linear infinite;
+}
+@keyframes spin-slow { 0% { transform: rotate(0deg); } to { transform: rotate(1turn); } }
+
+.skill-badge { transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease; }
+.skill-badge:hover { transform: translateY(-2px); box-shadow: 0 4px 20px var(--accent-muted); }
+
+.code-block { font-family: var(--font-mono); font-size: 0.8rem; line-height: 1.7; }
