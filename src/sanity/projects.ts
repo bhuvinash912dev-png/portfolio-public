@@ -5,7 +5,7 @@ import { defaultProjects, type Project, type ProjectImage } from "@/data/site";
 
 const client = projectId ? createClient({ projectId, dataset, apiVersion, useCdn: true }) : null;
 
-const projectsQuery = `*[_type == "project"] | order(order asc, _createdAt asc) {
+const projectsQuery = `*[_type == "project"] | order(orderRank asc, _createdAt desc) {
   "id": _id, title, description, tags, featured, liveUrl,
   "images": images[defined(asset)]{ ${imageFields} }
 }`;

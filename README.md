@@ -30,7 +30,7 @@ Open http://localhost:3001/studio and log in.
 
 - **Profile**: upload your photo. Click the crop icon on the image to crop it, and drag the focus
   circle onto your face; the hero and navbar centre on that point. Without a photo here, `public/photo.png` is used.
-- **Projects**: add, edit, reorder (with the `order` field) or delete projects. Each takes a title,
+- **Projects**: add, edit, reorder (drag the handles in the **Projects** list) or delete projects. Each takes a title,
   description, several screenshots (the first is the cover; each can be cropped and given a focus point),
   stack tags and a live URL.
 

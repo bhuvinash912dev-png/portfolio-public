@@ -44,7 +44,7 @@ function CardGallery({ project, onOpen }: { project: Project; onOpen: (index: nu
 
   return (
     <div
-      className={`group/gallery relative aspect-[16/10] overflow-hidden bg-[var(--surface)] border-b border-[var(--surface-border)] ${images.length ? "cursor-zoom-in" : ""}`}
+      className={`group/gallery relative aspect-[6/5] md:aspect-[4/3] lg:aspect-[16/10] overflow-hidden bg-[var(--surface)] border-b border-[var(--surface-border)] ${images.length ? "cursor-zoom-in" : ""}`}
       onClick={() => images.length && onOpen(index)}
     >
       {current ? (
@@ -62,7 +62,7 @@ function CardGallery({ project, onOpen }: { project: Project; onOpen: (index: nu
               src={current.url}
               alt={current.alt || `${project.title} screenshot ${index + 1}`}
               fill
-              sizes="(min-width: 1024px) 384px, (min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 1152px) 576px, (min-width: 768px) 50vw, 100vw"
               placeholder={current.lqip ? "blur" : "empty"}
               blurDataURL={current.lqip}
               className="object-cover object-top transition-transform duration-500 group-hover/gallery:scale-[1.03]"
@@ -142,10 +142,11 @@ function Lightbox({ project, start, onClose }: { project: Project; start: number
     >
       <div className="flex items-center justify-between gap-4 px-4 md:px-6 py-4 text-white" onClick={(e) => e.stopPropagation()}>
         <div className="min-w-0">
-          <p className="font-display text-lg font-bold truncate">{project.title}</p>
-          <p className="text-xs font-mono text-white/60">
-            {index + 1} / {images.length}
+          <p className="font-display text-lg font-bold truncate">
+            {project.title} <span className="text-xs font-mono font-normal text-white/60">{index + 1} / {images.length}</span>
           </p>
+          {/* Cards clamp the description, so the full text lives here. */}
+          {project.description && <p className="text-sm text-white/70 max-w-3xl line-clamp-3 md:line-clamp-none">{project.description}</p>}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
           {project.liveUrl && (
@@ -234,7 +235,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6">
           {projects.map((p, i) => (
             <motion.article
               key={p.id}
@@ -247,36 +248,50 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
             >
               <CardGallery project={p} onOpen={(index) => setOpen({ project: p, index })} />
 
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <h3 className="font-display text-xl font-bold text-[var(--ink)]">{p.title}</h3>
+              <div className="p-5 md:p-6 flex flex-col flex-1">
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--ink)] line-clamp-1 lg:line-clamp-2" title={p.title}>{p.title}</h3>
                   {p.featured && (
                     <span className="flex-shrink-0 px-2 py-0.5 rounded-full bg-[var(--accent)] text-white text-xs font-mono">Featured</span>
                   )}
                 </div>
 
-                {p.description && <p className="text-sm text-[var(--ink-muted)] leading-relaxed flex-1">{p.description}</p>}
+                {/* Clamped so the image stays at least half the card; the lightbox shows it in full. */}
+                {p.description && (
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed line-clamp-2 lg:line-clamp-3" title={p.description}>
+                    {p.description}
+                  </p>
+                )}
 
                 {p.tags && p.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-5">
-                    {p.tags.map((t) => (
-                      <span key={t} className="text-xs px-2 py-0.5 rounded-md bg-[var(--surface)] border border-[var(--surface-border)] text-[var(--ink-faint)] font-mono">
+                  // Below lg, show the first 3 tags in a single row plus a "+N" count.
+                  <div className="flex flex-wrap gap-1.5 mt-4 max-h-6 overflow-hidden lg:max-h-none">
+                    {p.tags.map((t, ti) => (
+                      <span
+                        key={t}
+                        className={`text-xs px-2 py-0.5 rounded-md bg-[var(--surface)] border border-[var(--surface-border)] text-[var(--ink-faint)] font-mono ${ti >= 3 ? "hidden lg:inline" : ""}`}
+                      >
                         {t}
                       </span>
                     ))}
+                    {p.tags.length > 3 && (
+                      <span className="lg:hidden text-xs px-2 py-0.5 rounded-md text-[var(--ink-faint)] font-mono">+{p.tags.length - 3}</span>
+                    )}
                   </div>
                 )}
 
                 {p.liveUrl && (
-                  <a
-                    href={p.liveUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-6 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-semibold hover:opacity-90 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
-                  >
-                    Live site
-                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </a>
+                  <div className="mt-auto pt-5">
+                    <a
+                      href={p.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-semibold hover:opacity-90 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-200"
+                    >
+                      Live site
+                      <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </a>
+                  </div>
                 )}
               </div>
             </motion.article>

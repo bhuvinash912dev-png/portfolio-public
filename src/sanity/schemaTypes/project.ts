@@ -1,3 +1,4 @@
+import { orderRankField, orderRankOrdering } from "@sanity/orderable-document-list";
 import { defineArrayMember, defineField, defineType } from "sanity";
 
 export const project = defineType({
@@ -23,9 +24,10 @@ export const project = defineType({
     defineField({ name: "tags", title: "Stack", type: "array", of: [{ type: "string" }], options: { layout: "tags" } }),
     defineField({ name: "liveUrl", title: "Live URL", type: "url" }),
     defineField({ name: "featured", type: "boolean", initialValue: false }),
-    defineField({ name: "order", type: "number", description: "Lower numbers appear first", initialValue: 0 }),
+    // Hidden field set by dragging projects in the Studio's "Projects" list; new projects go first.
+    orderRankField({ type: "project", newItemPosition: "before" }),
   ],
-  orderings: [{ title: "Display order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] }],
+  orderings: [orderRankOrdering],
   preview: {
     select: { title: "title", subtitle: "liveUrl", media: "images.0" },
   },
