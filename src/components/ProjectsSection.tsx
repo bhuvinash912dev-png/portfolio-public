@@ -44,7 +44,7 @@ function CardGallery({ project, onOpen }: { project: Project; onOpen: (index: nu
 
   return (
     <div
-      className={`group/gallery relative aspect-[6/5] md:aspect-[4/3] lg:aspect-[16/10] overflow-hidden bg-[var(--surface)] border-b border-[var(--surface-border)] ${images.length ? "cursor-zoom-in" : ""}`}
+      className={`group/gallery relative aspect-[6/5] md:aspect-[4/3] lg:aspect-[5/4] overflow-hidden bg-[var(--surface)] border-b border-[var(--surface-border)] ${images.length ? "cursor-zoom-in" : ""}`}
       onClick={() => images.length && onOpen(index)}
     >
       {current ? (
@@ -62,7 +62,7 @@ function CardGallery({ project, onOpen }: { project: Project; onOpen: (index: nu
               src={current.url}
               alt={current.alt || `${project.title} screenshot ${index + 1}`}
               fill
-              sizes="(min-width: 1152px) 576px, (min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 1152px) 368px, (min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
               placeholder={current.lqip ? "blur" : "empty"}
               blurDataURL={current.lqip}
               className="object-cover object-top transition-transform duration-500 group-hover/gallery:scale-[1.03]"
@@ -235,7 +235,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
           </div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.map((p, i) => (
             <motion.article
               key={p.id}
@@ -250,7 +250,7 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
 
               <div className="p-5 md:p-6 flex flex-col flex-1">
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--ink)] line-clamp-1 lg:line-clamp-2" title={p.title}>{p.title}</h3>
+                  <h3 className="font-display text-lg md:text-xl font-bold text-[var(--ink)] line-clamp-1" title={p.title}>{p.title}</h3>
                   {p.featured && (
                     <span className="flex-shrink-0 px-2 py-0.5 rounded-full bg-[var(--accent)] text-white text-xs font-mono">Featured</span>
                   )}
@@ -258,24 +258,24 @@ export function ProjectsSection({ projects }: { projects: Project[] }) {
 
                 {/* Clamped so the image stays at least half the card; the lightbox shows it in full. */}
                 {p.description && (
-                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed line-clamp-2 lg:line-clamp-3" title={p.description}>
+                  <p className="text-sm text-[var(--ink-muted)] leading-relaxed line-clamp-2" title={p.description}>
                     {p.description}
                   </p>
                 )}
 
                 {p.tags && p.tags.length > 0 && (
-                  // Below lg, show the first 3 tags in a single row plus a "+N" count.
-                  <div className="flex flex-wrap gap-1.5 mt-4 max-h-6 overflow-hidden lg:max-h-none">
+                  // Show the first 3 tags in a single row plus a "+N" count.
+                  <div className="flex flex-wrap gap-1.5 mt-4 max-h-6 overflow-hidden">
                     {p.tags.map((t, ti) => (
                       <span
                         key={t}
-                        className={`text-xs px-2 py-0.5 rounded-md bg-[var(--surface)] border border-[var(--surface-border)] text-[var(--ink-faint)] font-mono ${ti >= 3 ? "hidden lg:inline" : ""}`}
+                        className={`text-xs px-2 py-0.5 rounded-md bg-[var(--surface)] border border-[var(--surface-border)] text-[var(--ink-faint)] font-mono ${ti >= 3 ? "hidden" : ""}`}
                       >
                         {t}
                       </span>
                     ))}
                     {p.tags.length > 3 && (
-                      <span className="lg:hidden text-xs px-2 py-0.5 rounded-md text-[var(--ink-faint)] font-mono">+{p.tags.length - 3}</span>
+                      <span className="text-xs px-2 py-0.5 rounded-md text-[var(--ink-faint)] font-mono">+{p.tags.length - 3}</span>
                     )}
                   </div>
                 )}
